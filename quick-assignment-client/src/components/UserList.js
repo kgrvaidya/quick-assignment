@@ -50,7 +50,6 @@ const UserList = () => {
         axios.get('https://reqres.in/api/users?delay=3')
         .then((res) => {
             setUserList(res.data.data)
-            console.log('Res data : ', userList)
             setLoading(false)
         })
         .catch((err) => {
@@ -98,7 +97,7 @@ const UserListSection = ({userList, sortUser, sortOrder }) => {
 const SmallCard = ({user}) => {
     return (
         <div class="card user-card">
-                <img src={user.avatar} class="avatar" />
+                <img src={user.avatar} class="avatar" alt="user profile" />
                 <a href={`/user/${user.id}`}>
                     <div class="card-body">
                         <p class="card-text">{user.first_name}</p>

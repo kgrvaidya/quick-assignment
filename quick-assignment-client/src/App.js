@@ -1,16 +1,18 @@
 import './App.css';
-// import UserList from './components/UserList';
-// import UserComponent from './components/User';
 import { BrowserRouter } from 'react-router-dom';
 import Routing from './components/RouteComponent';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routing />
-      </BrowserRouter>
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <BrowserRouter>
+          <Routing />
+        </BrowserRouter>
+      </div>
+    </Provider>
   );
 }
 
