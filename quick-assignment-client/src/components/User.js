@@ -4,27 +4,27 @@ import { useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import Spinner from './Spinner'
 import { getUser} from '../redux/actions/userAction'
+import { startLoading, endLoading } from '../redux/actions/spinnerAction';
 
 import '../style/User.css';
 
-const UserComponent = ({user, getUser}) => {
-
-    const [loading, setLoading] = useState(false)
+const UserComponent = ({user, getUser, startLoading, endLoading, spinner}) => {
 
     const userId = useParams().id;
 
     useEffect(() => {
-        setLoading(true)
+        startLoading()
 
         axios.get(`https://reqres.in/api/users/${userId}`)
         .then((res) => {
             const userData = res.data.data
+            console.log('User data : ',userData);
             getUser(userData);
-            setLoading(false)
+            endLoading()
         })
         .catch((err) => {
             console.log(err);
-            setLoading(false)
+            endLoading()
         })
     }, [])
 
@@ -46,19 +46,23 @@ const UserComponent = ({user, getUser}) => {
 
     return (
         <div>
-            { loading ? <Spinner /> : <LargeCard user={user} /> }
+            { spinner.isLoading ? <Spinner /> : <LargeCard user={user} /> }
         </div>
     )
 }
 
 const mapStateToProps = (state) => {
+    console.log(state)
     return {
-        user : state.user
+        user : state.user.user,
+        spinner : state.spinner
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        getUser : (user) => dispatch(getUser(user))
+        getUser : (user) => dispatch(getUser(user)),
+        startLoading : () => dispatch(startLoading()),
+        endLoading : () => dispatch(endLoading()),
     }
 }
 
