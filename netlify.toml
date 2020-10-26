@@ -1,7 +1,7 @@
 [build]
-  command = "npm run build"
-  publish="quick-assignment-client/build"
-  base = "quick-assignment-client"
+command = "npm run build"
+publish="quick-assignment-client/build"
+base = "quick-assignment-client"
 
 [[redirects]]
 from = "/*"
