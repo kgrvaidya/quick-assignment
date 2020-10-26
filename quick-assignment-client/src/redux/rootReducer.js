@@ -4,10 +4,12 @@ import { combineReducers } from 'redux';
 
 import { userReducer } from './reducres/userReducer'
 import { spinnerReducer } from './reducres/spinnerReducer';
+import { userListReducer } from './reducres/userListReducer';
 
 const rootReducer = combineReducers({
     user : userReducer,
-    spinner : spinnerReducer
+    spinner : spinnerReducer,
+    userList : userListReducer,
 })
 
 export default rootReducer

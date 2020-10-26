@@ -10,12 +10,10 @@ export const spinnerReducer = (state = initialState, action) => {
             ...state,
             loading : true
         }
-        break;
         case SPINNER.STOP_LOADING : return {
             ...state,
             loading : false
         }
-        break;
         default : {
             return state
         }

@@ -2,40 +2,43 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
 import '../style/UserList.css';
+import { connect } from 'react-redux';
+import { getUserList } from '../redux/actions/userListAction';
+import { startLoading, endLoading } from '../redux/actions/spinnerAction';
 
-const UserList = () => {
-    const [loading, setLoading] = useState(false)
-    const [userList, setUserList] = useState([])
+
+const UserList = ({users, spinner, getAllUser, startLoading, endLoading}) => {
+    // const [userList, setUserList] = useState([])
     const [sortOrder, setSortOrder] = useState('None')
 
     const sortUsers = (sortOption) => {
         switch(sortOption) {
             case 'none' : {
-                let sorted = [...userList].sort((a,b) => a.id - b.id)
+                let sorted = [...users].sort((a,b) => a.id - b.id)
                 console.log('Id : ',sorted)
-                setUserList([...sorted])
+                getAllUser([...sorted])
                 setSortOrder('None')
                 break;
             }
             case 'firstName' : {
-                let sorted = [...userList].sort((a,b) => {
+                let sorted = [...users].sort((a,b) => {
                     if(a.first_name < b.first_name) { return -1; }
                     if(a.first_name > b.first_name) { return 1; }
                     return 0;
                     })
                 console.log('First Name : ',sorted)
-                setUserList([...sorted])
+                getAllUser([...sorted])
                 setSortOrder('First Name')
                 break;
             }
             case 'lastName' : {
-                let sorted = [...userList].sort((a,b) => {
+                let sorted = [...users].sort((a,b) => {
                     if(a.last_name < b.last_name) { return -1; }
                     if(a.last_name > b.last_name) { return 1; }
                     return 0;
                 })
                 console.log('Last Name : ',sorted)
-                setUserList([...sorted])
+                getAllUser([...sorted])
                 setSortOrder('Last Name')                
                 break;
             }
@@ -46,21 +49,23 @@ const UserList = () => {
     }
 
     useEffect(() => {
-        setLoading(true)
+        startLoading()
         axios.get('https://reqres.in/api/users?delay=3')
         .then((res) => {
-            setUserList(res.data.data)
-            setLoading(false)
+            let allUsers = res.data.data;
+            console.log('All users : ', allUsers)
+            getAllUser(allUsers);
+            endLoading();
         })
         .catch((err) => {
             console.log(err)
-            setLoading(false)
+            endLoading();
         })
     }, [])
 
     return (
         <div>
-            {loading ? <Spinner /> : <UserListSection userList={userList} sortUser={sortUsers} sortOrder={sortOrder} /> }
+            {spinner.loading ? <Spinner /> : <UserListSection userList={users} sortUser={sortUsers} sortOrder={sortOrder} /> }
             
         </div>
     )
@@ -69,25 +74,25 @@ const UserList = () => {
 const UserListSection = ({userList, sortUser, sortOrder }) => {
     userList = userList ? userList : []
     return (
-        <section class="userGridContainer">
-            <div class="userListContent">
+        <section className="userGridContainer">
+            <div className="userListContent">
                 <h3> Users </h3>
-                <div class="dropdown-right">
+                <div className="dropdown-right">
                     <div>
-                        <div class="dropdown">
+                        <div className="dropdown">
                             <label> Current Sort Order : <span style={{'color': '#007bff'}}>{sortOrder}</span></label>
-                            <button class="btn btn-secondary dropdown-toggle sort-button" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button className="btn btn-secondary dropdown-toggle sort-button" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Sort
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <button class="dropdown-item" type="button" value="none" onClick={() => sortUser('none')}>None</button>
-                                <button class="dropdown-item" type="button" value="firstName" onClick={() => sortUser('firstName')}>First Name</button>
-                                <button class="dropdown-item" type="button" value="lastName" onClick={() => sortUser('lastName')}>Last Name</button>
+                            <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <button className="dropdown-item" type="button" value="none" onClick={() => sortUser('none')}>None</button>
+                                <button className="dropdown-item" type="button" value="firstName" onClick={() => sortUser('firstName')}>First Name</button>
+                                <button className="dropdown-item" type="button" value="lastName" onClick={() => sortUser('lastName')}>Last Name</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="UserCardGrid">
+                <div className="UserCardGrid">
                     { userList.map(user => <SmallCard key={user.id} user={user} />) }
                 </div>
             </div>
@@ -107,4 +112,20 @@ const SmallCard = ({user}) => {
             </div>
     )
 }
-export default UserList;
+
+const mapStateToProps = (state) => {
+    //console.log(state)
+    return {
+        users : state.userList.users,
+        spinner : state.spinner
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getAllUser : (users) => dispatch(getUserList(users)),
+        startLoading : () => dispatch(startLoading()),
+        endLoading : () => dispatch(endLoading()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps )(UserList);
