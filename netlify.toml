@@ -1,6 +1,6 @@
 [build]
 command = "npm run build"
-publish="quick-assignment-client/build"
+publish="build/"
 base = "quick-assignment-client"
 
 [[redirects]]
