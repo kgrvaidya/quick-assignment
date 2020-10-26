@@ -59,6 +59,8 @@ const UserList = ({users, spinner, getAllUser, startLoading, endLoading}) => {
             console.log(err)
             endLoading();
         })
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

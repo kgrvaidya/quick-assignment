@@ -25,6 +25,7 @@ const UserComponent = ({user, getUser, startLoading, endLoading, spinner}) => {
             console.log(err);
             endLoading()
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const LargeCard = ({user}) => {
