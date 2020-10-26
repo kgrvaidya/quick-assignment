@@ -8,7 +8,6 @@ import { startLoading, endLoading } from '../redux/actions/spinnerAction';
 
 
 const UserList = ({users, spinner, getAllUser, startLoading, endLoading}) => {
-    // const [userList, setUserList] = useState([])
     const [sortOrder, setSortOrder] = useState('None')
 
     const sortUsers = (sortOption) => {
@@ -53,7 +52,6 @@ const UserList = ({users, spinner, getAllUser, startLoading, endLoading}) => {
         axios.get('https://reqres.in/api/users?delay=3')
         .then((res) => {
             let allUsers = res.data.data;
-            console.log('All users : ', allUsers)
             getAllUser(allUsers);
             endLoading();
         })
@@ -101,12 +99,12 @@ const UserListSection = ({userList, sortUser, sortOrder }) => {
 }
 const SmallCard = ({user}) => {
     return (
-        <div class="card user-card">
-                <img src={user.avatar} class="avatar" alt="user profile" />
+        <div className="card user-card">
+                <img src={user.avatar} className="avatar" alt="user profile" />
                 <a href={`/user/${user.id}`}>
-                    <div class="card-body">
-                        <p class="card-text">{user.first_name}</p>
-                        <p class="card-text">{user.last_name}</p>
+                    <div className="card-body">
+                        <p className="card-text">{user.first_name}</p>
+                        <p className="card-text">{user.last_name}</p>
                     </div>
                 </a>
             </div>
