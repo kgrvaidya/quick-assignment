@@ -6,19 +6,37 @@ import '../style/UserList.css';
 const UserList = () => {
     const [loading, setLoading] = useState(false)
     const [userList, setUserList] = useState([])
+    const [sortOrder, setSortOrder] = useState('None')
 
     const sortUsers = (sortOption) => {
         switch(sortOption) {
             case 'none' : {
-                setUserList(userList.sort((a,b) => a.id < b.id))
+                let sorted = [...userList].sort((a,b) => a.id - b.id)
+                console.log('Id : ',sorted)
+                setUserList([...sorted])
+                setSortOrder('None')
                 break;
             }
             case 'firstName' : {
-                setUserList(userList.sort((a,b) => a.first_name < b.first_name))
+                let sorted = [...userList].sort((a,b) => {
+                    if(a.first_name < b.first_name) { return -1; }
+                    if(a.first_name > b.first_name) { return 1; }
+                    return 0;
+                    })
+                console.log('First Name : ',sorted)
+                setUserList([...sorted])
+                setSortOrder('First Name')
                 break;
             }
             case 'lastName' : {
-                setUserList(userList.sort((a,b) => a.last_name < b.last_name))
+                let sorted = [...userList].sort((a,b) => {
+                    if(a.last_name < b.last_name) { return -1; }
+                    if(a.last_name > b.last_name) { return 1; }
+                    return 0;
+                })
+                console.log('Last Name : ',sorted)
+                setUserList([...sorted])
+                setSortOrder('Last Name')                
                 break;
             }
             default : {
@@ -43,13 +61,13 @@ const UserList = () => {
 
     return (
         <div>
-            {loading ? <Spinner /> : <UserListSection userList={userList} sortUser={sortUsers}/> }
+            {loading ? <Spinner /> : <UserListSection userList={userList} sortUser={sortUsers} sortOrder={sortOrder} /> }
             
         </div>
     )
 }
 
-const UserListSection = ({userList, sortUser }) => {
+const UserListSection = ({userList, sortUser, sortOrder }) => {
     userList = userList ? userList : []
     return (
         <section class="userGridContainer">
@@ -58,7 +76,8 @@ const UserListSection = ({userList, sortUser }) => {
                 <div class="dropdown-right">
                     <div>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <label> Current Sort Order : <span style={{'color': '#007bff'}}>{sortOrder}</span></label>
+                            <button class="btn btn-secondary dropdown-toggle sort-button" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Sort
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -79,7 +98,7 @@ const UserListSection = ({userList, sortUser }) => {
 const SmallCard = ({user}) => {
     return (
         <div class="card user-card">
-                <img src={user.avatar} class="avatar" alt={user.first_name} />
+                <img src={user.avatar} class="avatar" />
                 <a href={`/user/${user.id}`}>
                     <div class="card-body">
                         <p class="card-text">{user.first_name}</p>

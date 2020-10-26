@@ -59,3 +59,9 @@
 a:hover {
   text-decoration: none;
 }
+label {
+  margin-right: 10px;
+}
+.sort-button {
+  width: 150px;
+}
